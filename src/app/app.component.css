@@ -26,3 +26,15 @@ button {
 .three{
     background-color:thistle;
 }
+
+.four{
+    background-color: darkgoldenrod;
+}
+
+footer{
+    text-align: center;
+}
+
+footer button {
+    background-color: deeppink;
+}

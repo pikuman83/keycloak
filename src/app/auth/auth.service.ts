@@ -17,6 +17,30 @@ export class AuthService {
     }
   }
 
+  getToken(): Promise<string> {
+    return this.keycloakService.getToken();
+  }
+
+  decodePayload(): Promise<any> {
+    return this.keycloakService.getToken().then((token: string) => {
+      const base64Url = token
+        .split('.')[1]
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+      const payload = decodeURIComponent(
+        window
+          .atob(base64Url)
+          .split('')
+          .map((c) => {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join('')
+      );
+
+      return JSON.parse(payload);
+    });
+  }
+
   public isLoggedIn(): Promise<boolean> {
     return this.keycloakService.isLoggedIn();
   }
@@ -30,7 +54,7 @@ export class AuthService {
   }
 
   public logout(): void {
-    this.keycloakService.logout(window.location.origin);
+    this.keycloakService.logout();
   }
 
   public redirectToProfile(): void {

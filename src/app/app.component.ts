@@ -23,4 +23,18 @@ export class AppComponent {
   logMyInfo2() {
     console.log('Roles: ', this.auth.getRoles());
   }
+
+  logMyInfo3() {
+    let token: string;
+    this.auth.getToken().then((tk) => (token = tk));
+    this.auth
+      .decodePayload()
+      .then((payload) =>
+        console.log('Decoded token payload: ', payload, 'Token: ', token)
+      );
+  }
+
+  logout() {
+    this.auth.logout();
+  }
 }
