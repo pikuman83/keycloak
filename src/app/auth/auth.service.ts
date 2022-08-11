@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakEvent, KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile, KeycloakTokenParsed } from 'keycloak-js';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -41,16 +42,16 @@ export class AuthService {
     });
   }
 
-  public isLoggedIn(): Promise<boolean> {
-    return this.keycloakService.isLoggedIn();
-  }
-
   public loadUserProfile(): Promise<KeycloakProfile> {
     return this.keycloakService.loadUserProfile();
   }
 
   public login(): void {
     this.keycloakService.login();
+  }
+
+  public async isLoggedIn(): Promise<boolean> {
+    return await this.keycloakService.isLoggedIn();
   }
 
   public logout(): void {
@@ -63,5 +64,12 @@ export class AuthService {
 
   public getRoles(): string[] {
     return this.keycloakService.getUserRoles();
+  }
+
+  public logEvents() {
+    console.log('loging events');
+    this.keycloakService.keycloakEvents$.subscribe((evt: any) =>
+      console.log({ evt })
+    );
   }
 }

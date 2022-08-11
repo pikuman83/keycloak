@@ -5,13 +5,20 @@ import { AuthService } from './auth/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Unblur Keycloak';
 
   constructor(private auth: AuthService) {}
+  async ngOnInit(): Promise<void> {
+    if (await this.auth.isLoggedIn())
+      console.log(
+        'logged in sucessfully, if user role includes "manage-users" syncronize users and load mission, else, load mission'
+      );
+  }
 
   logMyInfo() {
     console.log('My info: ', this.auth.getLoggedUser());
+    this.auth.logEvents();
   }
 
   logMyInfo1() {
