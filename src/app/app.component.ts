@@ -18,7 +18,6 @@ export class AppComponent implements OnInit {
 
   logMyInfo() {
     console.log('My info: ', this.auth.getLoggedUser());
-    this.auth.logEvents();
   }
 
   logMyInfo1() {
