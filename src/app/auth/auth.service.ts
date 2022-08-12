@@ -1,3 +1,4 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   KeycloakEvent,
@@ -5,11 +6,23 @@ import {
   KeycloakService,
 } from 'keycloak-angular';
 import { KeycloakProfile, KeycloakTokenParsed } from 'keycloak-js';
-import { Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 @Injectable()
 export class AuthService {
-  constructor(private keycloakService: KeycloakService) {
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    }),
+  };
+
+  url = 'http://localhost/irisws/get/skill';
+
+  constructor(
+    private keycloakService: KeycloakService,
+    private http: HttpClient
+  ) {
     this.keycloakService.keycloakEvents$.subscribe({
       next: (e) => {
         if (e.type == KeycloakEventType.OnTokenExpired) {
@@ -86,5 +99,13 @@ export class AuthService {
 
   public getRoles(): string[] {
     return this.keycloakService.getUserRoles();
+  }
+
+  getSkills(token: string): Observable<any> {
+    if (token) {
+      this.httpOptions.headers.append('Authorization', `Bearer ${token}`);
+      return this.http.get<any>(this.url, this.httpOptions);
+    }
+    return of();
   }
 }

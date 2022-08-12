@@ -7,6 +7,7 @@ import { AuthService } from './auth/auth.service';
 })
 export class AppComponent implements OnInit {
   title = 'Unblur Keycloak';
+  skills: any[] | undefined;
 
   constructor(private auth: AuthService) {}
   async ngOnInit(): Promise<void> {
@@ -42,5 +43,17 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.auth.logout();
+  }
+
+  async getSkills() {
+    this.skills = [];
+    if (await this.auth.isLoggedIn()) {
+      this.auth.getSkills(await this.auth.getToken()).subscribe((resArr) => {
+        resArr.arrayItems.forEach((skill: any) => {
+          this.skills?.push(JSON.parse(skill));
+        });
+        console.log(resArr);
+      });
+    }
   }
 }
