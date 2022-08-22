@@ -1,12 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  KeycloakEvent,
-  KeycloakEventType,
-  KeycloakService,
-} from 'keycloak-angular';
+import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile, KeycloakTokenParsed } from 'keycloak-js';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -30,7 +26,8 @@ export class AuthService {
           keycloakService.updateToken(20);
         }
         if (e.type == KeycloakEventType.OnAuthLogout) {
-          console.log('logged out');
+          alert('Logged out, Token revoked');
+          console.log('logged out, token revoked');
         }
         if (e.type == KeycloakEventType.OnActionUpdate) {
           console.log({ e });
